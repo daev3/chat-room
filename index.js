@@ -14,9 +14,13 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   io.emit('user connected', 'new user connected: ' + socket.id);
 
-  socket.on('chat message', (msg) => {
-    console.log(msg);
-    io.emit('chat message', msg);
+  socket.on('disconnect', () => {
+    io.emit('user disconnected', 'user disconnected: ' + socket.id);
+  });
+  
+  socket.on('chat message', ({msg, username}) => {
+    console.log(`${username}: ${msg}`);
+    io.emit('chat message', {msg, username });
   });
 });
 
