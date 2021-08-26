@@ -38,8 +38,10 @@
       form.addEventListener('submit', function(e) {
         e.preventDefault();
         if (msgInput.value) {
+          appendItemToList(msgInput.value, usernameInput.value);
           socket.emit('chat message', {
             'msg': msgInput.value,
+            'id': socket.id,
             'username': usernameInput.value,
           });
           msgInput.value = '';
@@ -47,10 +49,7 @@
       });
 
       socket.on('chat message', function({msg, username}) {
-        var item = document.createElement('li');
-        item.innerHTML = `<strong> ${username}</strong>: ${msg}`;
-        messages.appendChild(item);
-        window.scrollTo(0, document.body.scrollHeight);
+        appendItemToList(msg, username);
       });
 
       socket.on('user connected', function(msg) {
@@ -66,6 +65,13 @@
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
+
+      function appendItemToList(msg, username) {
+        var item = document.createElement('li');
+        item.innerHTML = `<strong> ${username}</strong>: ${msg}`;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      }
     </script>
   </body>
 </html>

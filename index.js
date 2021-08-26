@@ -12,15 +12,15 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  io.emit('user connected', 'new user connected: ' + socket.id);
+  socket.broadcast.emit('user connected', 'new user connected: ' + socket.id);
 
   socket.on('disconnect', () => {
-    io.emit('user disconnected', 'user disconnected: ' + socket.id);
+    socket.broadcast.emit('user disconnected', 'user disconnected: ' + socket.id);
   });
   
-  socket.on('chat message', ({msg, username}) => {
-    console.log(`${username}: ${msg}`);
-    io.emit('chat message', {msg, username });
+  socket.on('chat message', ({msg, id, username}) => {
+    console.log(`${id}/${username}: ${msg}`);
+    socket.broadcast.emit('chat message', {msg, id, username });
   });
 });
 
