@@ -22,6 +22,14 @@ io.on('connection', (socket) => {
     console.log(`${id}/${username}: ${msg}`);
     socket.broadcast.emit('chat message', {msg, id, username });
   });
+
+  socket.on('user started typing', ({username, socketId}) => {
+    socket.broadcast.emit('user started typing', {username, socketId});
+  });
+
+  socket.on('user stoped typing', (socketId) => {
+    socket.broadcast.emit('user stoped typing', socketId);
+  })
 });
 
 server.listen(3000, () => {
